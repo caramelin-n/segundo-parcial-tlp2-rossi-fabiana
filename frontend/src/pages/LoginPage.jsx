@@ -1,9 +1,23 @@
 import { Link } from "react-router";
+import { useForm, UseForm } from "../hooks/useForm";
 
-export const LoginPage = () => {
+export const LoginPage = ({handleLogin}) => {
   // TODO: Integrar lógica de autenticación aquí
   // TODO: Implementar useForm para el manejo del formulario
   // TODO: Implementar función handleSubmit
+
+  const { handleChange, handleReset, formState } = useForm({
+    username: "",
+    password: "",
+  });
+
+  const { username, password } = formState();
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    handleLogin(username);
+    handleReset();
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4 py-8">
@@ -20,7 +34,7 @@ export const LoginPage = () => {
           </p>
         </div>
 
-        <form onSubmit={(event) => {}}>
+        <form onSubmit={(handleSubmit) => {}}>
           <div className="mb-4">
             <label
               htmlFor="username"
