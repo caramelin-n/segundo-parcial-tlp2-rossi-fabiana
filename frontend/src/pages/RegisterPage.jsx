@@ -1,9 +1,66 @@
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
+import { useForm } from "../hooks/useForm";
+import { useState } from "react";
 
 export const RegisterPage = () => {
   // TODO: Integrar lógica de registro aquí
   // TODO: Implementar useForm para el manejo del formulario
   // TODO: Implementar función handleSubmit
+  
+  const Navigate = useNavigate();
+  
+  const { handleReset, handleChange, formState } = useForm({
+    username: "",
+    email: "",
+    password: "",
+    name: "",
+    lastname: "",
+  });
+  const { username, email, password, name, lastname } = formState;
+  const [message, setMessage] = useState(null);
+  
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    
+    if (!username || !email || !password || !name || !lastname) {
+      setMessage("Debe completar todos los campos.");
+    }
+
+    const fetchData = async () => {
+      try {
+        const resp = await fetch("http://localhost:3000/api/register", {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username: username,
+            email: email,
+            password: password,
+            name: name,
+            lastname: lastname,
+          }),
+        });
+
+        const data = await resp.json();
+
+        console.log(resp);
+        if (!resp.ok) {
+          setMessage(data.message);
+          return;
+        }
+
+        if (resp.ok) {
+          Navigate("/login");
+          return;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4 py-8">
@@ -14,12 +71,12 @@ export const RegisterPage = () => {
 
         {/* TODO: Mostrar este div cuando haya error */}
         <div className="hidden bg-red-100 text-red-700 p-3 rounded mb-4">
-          <p className="text-sm">
-            Error al crear la cuenta. Intenta nuevamente.
-          </p>
+          <p className="text-sm">{message}</p>
         </div>
 
-        <form onSubmit={(event) => {}}>
+        <form
+          onSubmit={handleSubmit}
+        >
           <div className="mb-4">
             <label
               htmlFor="username"

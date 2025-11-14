@@ -4,6 +4,9 @@ export const Navbar = () => {
   // TODO: Después del logout exitoso, redireccionar a /login
   // TODO: Manejar errores apropiadamente
 
+
+  
+
   const userName = "Usuario"; // TODO: Reemplazar con el nombre real del usuario obtenido de /api/profile
 
   return (
